@@ -1,31 +1,28 @@
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-const Login = () => {
+
+const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigate('/'); // Redirect to home or another page
     } catch (error) {
-      setError(error.message); 
-    } finally {
-      setLoading(false);
+      setError(error.message);
     }
   };
+
   return (
-    <>
-    <div className='flex items-center justify-center '>
-    <div className="login-container flex flex-col mt-72">
-      <h2>Login</h2>
+    <div>
+      <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="email"
@@ -41,20 +38,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-        {error && <p className="error-message">{error}</p>}
+        <button type="submit">Sign Up</button>
+        {error && <p>{error}</p>}
       </form>
-      <p>
-        <a href="/signup">Don't have an account? Sign Up</a>
-      </p>
-      <p>
-        <a href="/forgot-password">Forgot your password?</a>
-      </p>
     </div>
-    </div>
-    </>
   );
 };
-export default Login;
+
+export default SignUp;

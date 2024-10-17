@@ -5,14 +5,22 @@ import About from "./components/About"
 import Login from "./components/Login"
 import Calculator from './components/Calculator'
 import Contact from './components/Contact'
+import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
+import  Profile  from './components/Profile'
+import Logout from './components/Logout'
 const App = () => {
   return (
     <Routes>
       <Route path='/' element={<Home/>}/>
-      <Route path='/contact' component={<Contact/>}/>
-      <Route path='/calculator' component={<Calculator/>}/>
-      <Route path='/about' component={<About/>}/>
-      <Route path='/login' component={<Login/>}/>
+      <Route path='/contact' element={<Contact/>}/>
+      <Route path='/calculator' element={<Calculator/>}/>
+      <Route path='/about' element={<About/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/signup' element={<SignUp/>}/>
+      <Route path='/signin' element={<SignIn/>}/>
+      <Route path='/profile' element={<Profile/>}/>
+      <Route path='/logout' element={<Logout/>}/>
     </Routes>
   )
 }
