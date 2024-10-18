@@ -21,9 +21,9 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-indigo-500">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-green-500">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
-        <h2 className="text-3xl font-bold text-center text-gray-800">Sign Up</h2>
+        <h2 className="text-3xl font-bold text-center text-indigo-700">Sign Up</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <input
@@ -47,7 +47,7 @@ const SignUp = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-2 font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700 transition duration-200"
+            className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-purple-700 transition duration-200"
           >
             Sign Up
           </button>
