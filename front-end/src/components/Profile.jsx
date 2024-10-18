@@ -2,7 +2,7 @@ const Profile = () => {
   
   return (
     <div className="flex h-screen w-full justify-center items-center bg-gradient-to-r from-blue-500 to-green-500">
-      <div className="flex flex-col gap-6 bg-white p-[40px] rounded-[24px]">
+      <div className="flex flex-col gap-6 bg-white p-[40px] rounded-[15px]">
         <h1 className="text-center text-3xl pb-3 font-bold text-indigo-700"  >Details to enter</h1>
         <input className="px-4 py-2 w-96 rounded-sm outline-none border-gray-600 border-[1px]" type="text" placeholder="Enter your name"></input>
         <input className="px-4 py-2 w-96 rounded-sm outline-none border-gray-600 border-[1px]" type="number" placeholder="Enter your age"></input>
