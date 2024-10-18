@@ -29,7 +29,7 @@ app.post('/signin', async (req, res) => {
       const userRecord = await admin.auth().getUserByEmail(email);
       const customToken = await admin.auth().createCustomToken(userRecord.uid);
       res.status(200).send({ uid: userRecord.uid, token: customToken });
-  } catch (error) {
+  }catch (error) {
       res.status(401).send({ error: error.message });
   }
 });
