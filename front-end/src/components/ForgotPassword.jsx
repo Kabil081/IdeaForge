@@ -1,15 +1,21 @@
-import  { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const auth = getAuth();
+    const navigate = useNavigate();
     const handleForgotPassword = async (e) => {
         e.preventDefault();
+        setError('');
+        setMessage('');
         try {
-            const response = await axios.post('http://localhost:8000/api/forgot-password', { email });
-            setMessage(response.data.message);
+            await sendPasswordResetEmail(auth, email); 
+            setMessage('Password reset email sent! Check your inbox.');
         } catch (error) {
-            setMessage('Error sending email: ' + error.response.data.error);
+            setError('Error sending email: ' + error.message);
         }
     };
     return (
@@ -33,6 +39,7 @@ const ForgotPassword = () => {
                     </button>
                 </form>
                 {message && <p className="text-center text-green-600 mt-4">{message}</p>}
+                {error && <p className="text-center text-red-600 mt-4">{error}</p>}
             </div>
         </div>
     );

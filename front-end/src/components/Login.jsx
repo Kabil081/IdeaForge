@@ -16,8 +16,8 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/');
-    } catch (error) {
-      setError(error.message); 
+    } catch (error ) {
+      setError("Enter proper email or password!!"); 
     } finally {
       setLoading(false);
     }
