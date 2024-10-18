@@ -23,8 +23,18 @@ app.post('/signup', async (req, res) => {
       res.status(400).send({ error: error.message });
     }
 });
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+      await admin.auth().sendPasswordResetEmail(email);
+      res.status(200).send({ message: 'Password reset email sent.' });
+  } catch (error) {
+      res.status(400).send({ error: error.message });
+  }
+});
 app.post('/signin', async (req, res) => {
-  const { email, password } = req.body;
+  const {email,password} = req.body;
   try {
       const userRecord = await admin.auth().getUserByEmail(email);
       const customToken = await admin.auth().createCustomToken(userRecord.uid);

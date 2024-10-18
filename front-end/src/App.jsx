@@ -9,6 +9,7 @@ import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import  Profile  from './components/Profile'
 import Logout from './components/Logout'
+import ForgotPassword from './components/ForgotPassword'
 const App = () => {
   return (
     <Routes>
@@ -21,6 +22,7 @@ const App = () => {
       <Route path='/signin' element={<SignIn/>}/>
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/logout' element={<Logout/>}/>
+      <Route path="/forgot-password" element={<ForgotPassword/>}/>
     </Routes>
   )
 }
