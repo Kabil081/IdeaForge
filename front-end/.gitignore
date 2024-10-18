@@ -8,21 +8,50 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Build and Dependency Directories
-node_modules
-dist
-dist-ssr
+node_modules/
+dist/
+dist-ssr/
 *.local
 
 # Environment Variables
 .env
 
 # Editor Directories and Files
-.vscode/*
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Sensitive Files
+*.serviceAccountKey.json
+*.key
+*.pem
+node_modules/
+# Temporary Files
+tmp/
+temp/
+.cache/
+.cache-loader/
+*.tgz
+*.zip
+
+# Coverage
+coverage/
+.nyc_output/
+
+# TypeScript
+*.tsbuildinfo
+
+# Miscellaneous
+*.bak
+*.swp
+
+# MacOS specific
+Thumbs.db
+ehthumbs.db
+Icon?
