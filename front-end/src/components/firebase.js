@@ -14,5 +14,4 @@ console.log("API Key:", process.env.REACT_APP_FIREBASE_API_KEY);
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 export { app, auth, analytics};
