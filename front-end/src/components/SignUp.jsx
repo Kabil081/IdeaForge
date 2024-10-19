@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const auth = getAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -19,7 +17,6 @@ const SignUp = () => {
       setError(error.message);
     }
   };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-green-500">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
@@ -31,7 +28,7 @@ const SignUp = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
@@ -41,13 +38,13 @@ const SignUp = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-purple-700 transition duration-200"
+            className="w-full py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700 transition duration-200"
           >
             Sign Up
           </button>
@@ -56,8 +53,8 @@ const SignUp = () => {
           )}
         </form>
         <div className="flex justify-between mt-6">
-          <a href="/signin" className="text-sm text-purple-600 hover:underline">
-            Already have an account? Sign In
+          <a href="/login" className="text-sm text-purple-600 hover:underline">
+            Already have an account? Login
           </a>
           <a href="/forgot-password" className="text-sm text-purple-600 hover:underline">
             Forgot password?
