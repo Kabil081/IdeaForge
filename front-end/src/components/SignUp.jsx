@@ -13,7 +13,7 @@ const SignUp = () => {
     e.preventDefault();
     setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const user=await createUserWithEmailAndPassword(auth, email, password);
       navigate('/'); 
     } catch (error) {
       setError(error.message);
