@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import dotenv from 'dotenv';
 dotenv.config();
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -13,5 +14,8 @@ export default defineConfig({
   },
   define: {
     'process.env': process.env,
+  },
+  server: {
+    port: 3000,
   },
 });
