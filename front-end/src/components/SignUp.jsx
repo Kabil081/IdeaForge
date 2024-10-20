@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const auth = getAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -19,7 +17,6 @@ const SignUp = () => {
       setError(error.message);
     }
   };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-green-500">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
