@@ -25,7 +25,7 @@ const Footer = () => {
     >
       <div className='flex flex-col px-11 py-11 cursor-pointer'>
       <ul className='text-white'>
-  {['Information', 'Main', 'Gallery', 'Projects', 'Certifications', 'Contact'].map((item, index) => (
+  {['Home', 'About-Us', 'Contact', 'Profile', 'Login', 'Logout'].map((item, index) => (
     <motion.li
       className='py-3 text-white cursor-pointer font-semibold'
       key={index}
@@ -33,7 +33,7 @@ const Footer = () => {
       initial="hidden"
       animate="visible"
       transition={{ delay: index * 0.2 }} 
-      whileHover={{ scale: 1.1, color: 'gray', transition: { duration: 0.3 } }} 
+      whileHover={{ scale: 1.1, transition: { duration: 0.3 } }} 
       onClick={() => navigate(`/${item.toLowerCase()}`)}
     >
       {item}

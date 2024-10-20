@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import AddIcon from '@mui/icons-material/Add';
 
 const Profile = () => {
   const auth = getAuth();
@@ -38,6 +39,7 @@ const Profile = () => {
       }
     });
   }, [auth, db]);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -67,7 +69,7 @@ const Profile = () => {
         const storageRef = ref(storage, `profile_images/${user.uid}`);
         await uploadBytes(storageRef, profileImage);
         profileImageUrl = await getDownloadURL(storageRef);
-        console.log('Profile image uploaded:', profileImageUrl); // Log the uploaded image URL
+        console.log('Profile image uploaded:', profileImageUrl);
       }
 
       const updatedData = {
@@ -76,9 +78,9 @@ const Profile = () => {
       };
 
       await setDoc(doc(db, 'profiles', user.uid), updatedData);
-      console.log('Profile data saved:', updatedData); // Log the saved data
+      console.log('Profile data saved:', updatedData);
 
-      setFormData(updatedData); // Update the state with the new data
+      setFormData(updatedData);
       setSuccess('Profile saved successfully!');
       setIsEditing(false);
     } catch (error) {
@@ -99,13 +101,22 @@ const Profile = () => {
         {loading && <div className="text-center">Loading...</div>}
         {isEditing ? (
           <form onSubmit={handleSubmit} className="space-y-4 flex w-[700px] flex-col items-center">
-            <input
-              name="profile"
-              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+            <label 
+              className="flex items-center justify-center w-[600px] h-12 border border-gray-300 rounded-md cursor-pointer"
+              htmlFor="profile-upload"
+            >
+              <AddIcon />
+              <span className="ml-2 text-lg">Add/Change profile picture</span>
+              <input
+                id="profile-upload"
+                name="profile"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
+            {/* Other input fields */}
             <input
               name="name"
               className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
@@ -130,7 +141,7 @@ const Profile = () => {
               type="number"
               value={formData.income}
               onChange={handleChange}
-              placeholder="Enter your income"
+              placeholder="Enter your monthly contribution"
               required
             />
             <input
@@ -166,7 +177,7 @@ const Profile = () => {
               type="number"
               value={formData.risk_tolerance}
               onChange={handleChange}
-              placeholder="Enter risk tolerance (1-10)"
+              placeholder="Enter risk tolerance (1-5)"
               required
             />
             <button
