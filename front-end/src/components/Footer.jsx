@@ -40,8 +40,7 @@ const Footer = () => {
     </motion.li>
   ))}
 </ul>
-
-      </div>
+    </div>
       <div className='flex flex-col mx-16 my-10'>
         <div className='my-3'>
           <h1 className='text-white font-semibold'>
