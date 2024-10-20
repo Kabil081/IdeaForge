@@ -18,7 +18,6 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
   useEffect(() => {
     onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -33,12 +32,10 @@ const Profile = () => {
       }
     });
   }, [auth, db]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -76,7 +73,7 @@ const Profile = () => {
         <button className="w-[200px] py-2 bg-blue-500 text-white font-semibold rounded-sm hover:bg-blue-600 transition duration-300" type="submit">Save</button>
       </form>
     ) : (
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-4 cursor-pointer">
         <p><strong>Name:</strong> {formData.name}</p>
         <p><strong>Age:</strong> {formData.age}</p>
         <p><strong>Income:</strong> {formData.income}</p>
