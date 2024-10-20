@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Navbar from './Navbar';
 import photo from './images/pic.jpg';
+import Sendmail from "./Sendmail";
 
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [visibleAnswerIndex, setVisibleAnswerIndex] = useState(null);
+  const [isSendmailOpen, setIsSendmailOpen] = useState(false); // State for Sendmail popup
 
   const display = () => {
     setIsVisible(!isVisible);
@@ -14,11 +16,17 @@ const Contact = () => {
     setVisibleAnswerIndex(visibleAnswerIndex === index ? null : index);
   };
 
+  const openSendmail = () => {
+    setIsSendmailOpen(true);
+  };
+
+  const closeSendmail = () => {
+    setIsSendmailOpen(false);
+  };
+
   return (
     <div>
-      <div>
-        <Navbar />
-      </div>
+      <Navbar />
       <div className="m-0 flex items-center justify-evenly p-5">
         <div className="w-1/2 flex flex-col p-10 justify-center m-10">
           <h1 className="text-[3em] font-bold mb-5">Contact our support team</h1>
@@ -30,7 +38,10 @@ const Contact = () => {
             >
               FAQ
             </button>
-            <button className="bg-blue-700 px-[30px] py-[10px] rounded-lg text-white font-bold cursor-pointer active:scale-90">
+            <button
+              className="bg-blue-700 px-[30px] py-[10px] rounded-lg text-white font-bold cursor-pointer active:scale-90"
+              onClick={openSendmail}
+            >
               Send mail
             </button>
           </div>
@@ -150,6 +161,8 @@ const Contact = () => {
           </div>
         </div>
       )}
+
+      <Sendmail isOpen={isSendmailOpen} closeSendmail={closeSendmail} />
     </div>
   );
 };
