@@ -11,7 +11,7 @@ const SignUp = () => {
     e.preventDefault();
     setError('');
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const user=await createUserWithEmailAndPassword(auth, email, password);
       navigate('/'); 
     } catch (error) {
       setError(error.message);
@@ -53,8 +53,8 @@ const SignUp = () => {
           )}
         </form>
         <div className="flex justify-between mt-6">
-          <a href="/signin" className="text-sm text-purple-600 hover:underline">
-            Already have an account? Sign In
+          <a href="/login" className="text-sm text-purple-600 hover:underline">
+            Already have an account? Login
           </a>
           <a href="/forgot-password" className="text-sm text-purple-600 hover:underline">
             Forgot password?

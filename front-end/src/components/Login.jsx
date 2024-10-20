@@ -8,7 +8,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -51,7 +50,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full py-3 font-semibold text-white bg-blue-600 rounded-md hover:bg-indigo-700 transition duration-300"
+            className="w-full py-3 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
@@ -72,5 +71,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;
