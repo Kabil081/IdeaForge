@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
     const auth = getAuth();
-    const navigate = useNavigate();
     const handleForgotPassword = async (e) => {
         e.preventDefault();
         setError('');

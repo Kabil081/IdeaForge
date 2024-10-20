@@ -16,7 +16,7 @@ const Footer = () => {
   const navigate=useNavigate();
   return (
     <motion.div
-      className='flex flex-col md:flex-row bg-[#333333] py-11 px-32 cursor-pointer'
+      className='flex flex-col md:flex-row bg-blue-600 py-11 px-32 cursor-pointer'
       initial="hidden"
       animate="visible"
       exit="hidden"
@@ -40,8 +40,7 @@ const Footer = () => {
     </motion.li>
   ))}
 </ul>
-
-      </div>
+    </div>
       <div className='flex flex-col mx-16 my-10'>
         <div className='my-3'>
           <h1 className='text-white font-semibold'>
