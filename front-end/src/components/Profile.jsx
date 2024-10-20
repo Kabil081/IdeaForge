@@ -131,7 +131,7 @@ const Profile = () => {
               type="number"
               value={formData.income}
               onChange={handleChange}
-              placeholder="Enter your income"
+              placeholder="Enter your monthly contribution"
               required
             />
             <input
