@@ -7,8 +7,9 @@ import forumImage from './images/forum.png';
 import retirementImage from './images/retirement.png';
 import literacyImage from './images/literacy.png';
 import healthcareImage from './images/healthcare.png';
-
+import { Navigate, useNavigate } from 'react-router';
 const Home = () => {
+  const navigate=useNavigate();
   return (
     <>
       <Navbar />
@@ -25,14 +26,12 @@ const Home = () => {
             Secure Your Future with AI-Driven <br /> Financial Planning
           </div>
         </div>
-
         {/* Paragraph Section */}
         <div className="mt-10 mx-10 text-center text-lg text-gray-700">
           <p>
             Our platform provides personalized retirement planning and financial tools that empower retirees and pre-retirees to manage their finances more effectively. With AI-powered guidance, we help you build a future of financial security by optimizing your savings, managing healthcare costs, and improving your financial literacy.
           </p>
         </div>
-
         {/* Boxes Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10 mx-10 mb-20">
           {/* Box 1 - Discussion Forum */}
@@ -40,11 +39,10 @@ const Home = () => {
             <div className="w-full h-32 mb-4">
               <img src={forumImage} alt="Discussion Forum" className="rounded-lg object-contain w-full h-full" />
             </div>
-            <h3 className="text-2xl font-semibold mb-2">Discussion Forum</h3>
+            <h3 className="text-2xl font-semibold mb-2" >Discussion Forum</h3>
             <p className="text-gray-600 mb-4">Connect with others, ask questions, and share advice on retirement planning.</p>
-            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700">Join Now</Button>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/discussion')}>Join Now</Button>
           </div>
-
           {/* Box 2 - Retirement Plan */}
           <div className="bg-white border border-gray-300 p-6 rounded-lg shadow-lg transition duration-300 hover:shadow-xl">
             <div className="w-full h-32 mb-4">
@@ -76,9 +74,8 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </>
   );
 };
-
 export default Home;
