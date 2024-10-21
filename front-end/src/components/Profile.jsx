@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import AddIcon from '@mui/icons-material/Add';
 
 const Profile = () => {
   const auth = getAuth();
@@ -104,8 +103,7 @@ const Profile = () => {
             <label 
               className="flex items-center justify-center w-[600px] h-12 border border-gray-300 rounded-md cursor-pointer"
               htmlFor="profile-upload"
-            >
-              <AddIcon />
+            > 
               <span className="ml-2 text-lg">Add/Change profile picture</span>
               <input
                 id="profile-upload"
