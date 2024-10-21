@@ -216,7 +216,8 @@ const Profile = () => {
               Get Results
             </button>
           </div>
-        )}
+        ) 
+        }
       </div>
     </div>
   );
