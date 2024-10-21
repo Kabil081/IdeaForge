@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate
 
 const Profile = () => {
+  // ... (previous state variables and functions)
   const auth = getAuth();
   const db = getFirestore();
   const storage = getStorage();
-  const navigate = useNavigate();  // Initialize navigate
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     profile: '',
@@ -27,9 +27,6 @@ const Profile = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [recommendation, setRecommendation] = useState(null);
-  const [futureSavings, setFutureSavings] = useState(null);
-  const [savingsOverTime, setSavingsOverTime] = useState(null);
-
   useEffect(() => {
     onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -44,23 +41,33 @@ const Profile = () => {
       }
     });
   }, [auth, db]);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setProfileImage(e.target.files[0]);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
     setLoading(true);
+
     if (!user) {
       setError('User not logged in');
       setLoading(false);
       return;
     }
+
     try {
+      // ... (previous profile saving logic)
       let profileImageUrl = '';
       if (profileImage) {
         const storageRef = ref(storage, `profile_images/${user.uid}`);
@@ -68,14 +75,15 @@ const Profile = () => {
         profileImageUrl = await getDownloadURL(storageRef);
         console.log('Profile image uploaded:', profileImageUrl);
       }
+
       const updatedData = {
         ...formData,
         profile: profileImageUrl || formData.profile,
       };
+
       await setDoc(doc(db, 'profiles', user.uid), updatedData);
       console.log('Profile data saved:', updatedData);
-
-      // Get investment recommendation and future savings
+      // Get investment recommendation
       try {
         const response = await axios.post('http://127.0.0.1:5000/api/recommend', {
           age: parseInt(formData.age),
@@ -86,11 +94,12 @@ const Profile = () => {
         });
         console.log('Recommendation response:', response.data);
         setRecommendation(response.data.recommendation);
-        setFutureSavings(Number(response.data.future_savings.toFixed(2)));
-        setSavingsOverTime(response.data.savings_over_time);
       } catch (apiError) {
         console.error('API Error:', apiError);
         setError(`Error getting recommendation: ${apiError.message}`);
+        if (apiError.response) {
+          console.error('API Response:', apiError.response.data);
+        }
       }
 
       setFormData(updatedData);
@@ -103,88 +112,100 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
-  const handleGetResults = () => {
-    // Ensure that recommendation and futureSavings are available
-    if (recommendation && futureSavings !== undefined && savingsOverTime) {
-      navigate('/recommendation', { state: { recommendation, futureSavings, savingsOverTime } });
-    } else {
-      setError('Please generate recommendations first.');
-    }
-  };
-
   return (
     <div className="flex min-h-screen w-full justify-center items-center bg-gradient-to-r from-blue-500 to-green-500">
       <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4">Profile</h1>
-
-        {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500">{success}</p>}
-        
+        <h1 className="text-center text-3xl font-bold text-indigo-700">
+          {isEditing ? 'Edit Profile' : 'Profile Details'}
+        </h1>
+        {error && <div className="text-red-500 text-center">{error}</div>}
+        {success && <div className="text-green-500 text-center">{success}</div>}
+        {loading && <div className="text-center">Loading...</div>}
         {isEditing ? (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-4 flex w-[700px] flex-col items-center">
+            <label 
+              className="flex items-center justify-center w-[600px] h-12 border border-gray-300 rounded-md cursor-pointer"
+              htmlFor="profile-upload"
+            >
+              <AddIcon />
+              <span className="ml-2 text-lg">Add/Change profile picture</span>
+              <input
+                id="profile-upload"
+                name="profile"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </label>
             <input
-              type="text"
               name="name"
-              placeholder="Name"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="text"
               value={formData.name}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter your name"
+              required
             />
             <input
-              type="number"
               name="age"
-              placeholder="Age"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.age}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter your age"
+              required
             />
             <input
-              type="number"
               name="income"
-              placeholder="Monthly Income"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.income}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter your monthly contribution"
+              required
             />
             <input
-              type="number"
               name="savings"
-              placeholder="Current Savings"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.savings}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter your savings"
+              required
             />
             <input
-              type="number"
               name="retirement_age"
-              placeholder="Retirement Age"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.retirement_age}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter retirement age"
+              required
             />
             <input
-              type="number"
               name="retirement_savings"
-              placeholder="Retirement Savings"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.retirement_savings}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter retirement savings"
+              required
             />
             <input
-              type="number"
               name="risk_tolerance"
-              placeholder="Risk Tolerance (1-5)"
+              className="px-4 py-2 w-[600px] rounded-sm border border-gray-300"
+              type="number"
               value={formData.risk_tolerance}
               onChange={handleChange}
-              className="w-full mb-4 p-2 border border-gray-300 rounded-lg"
+              placeholder="Enter risk tolerance (1-5)"
+              required
             />
             <button
+              className="w-[200px] py-2 bg-blue-500 text-white font-semibold rounded-sm hover:bg-blue-600 transition duration-300"
               type="submit"
-              className="w-full bg-blue-500 text-white p-2 rounded-lg"
-              disabled={loading}
             >
-              {loading ? 'Saving...' : 'Save Profile'}
+              Save
             </button>
           </form>
         ) : (
@@ -192,7 +213,7 @@ const Profile = () => {
             {formData.profile && <img src={formData.profile} alt="Profile" className="ml-8 w-40 h-40 rounded-full object-cover" />}
             <p><strong>Name:</strong> {formData.name}</p>
             <p><strong>Age:</strong> {formData.age}</p>
-            <p><strong>Monthly contribution:</strong> {formData.income}</p>
+            <p><strong>Income:</strong> {formData.income}</p>
             <p><strong>Savings:</strong> {formData.savings}</p>
             <p><strong>Retirement Age:</strong> {formData.retirement_age}</p>
             <p><strong>Retirement Savings:</strong> {formData.retirement_savings}</p>
@@ -203,19 +224,25 @@ const Profile = () => {
             >
               Edit
             </button>
+          </div>
+        )}
+        {recommendation && (
+          <div>
+            <h2>Recommended Investment: {recommendation}</h2>
+            <h3>Future Savings at Retirement: {futureSavings}</h3>
+          </div>
+        )}
 
-            {/* Get Results Button */}
-            <button
-              className="w-full py-2 bg-blue-600 text-white font-semibold rounded-sm hover:bg-blue-700 transition duration-300"
-              onClick={handleGetResults}
-            >
-              Get Results
-            </button>
+        {/* Display savings graph */}
+        {savingsOverTime && (
+          <div>
+            <Line data={chartData} />
           </div>
         )}
       </div>
     </div>
   );
+  // ... (rest of the component remains the same)
 };
 
 export default Profile;
