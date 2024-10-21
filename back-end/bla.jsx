@@ -6,7 +6,6 @@ import AddIcon from '@mui/icons-material/Add';
 import axios from 'axios';
 
 const Profile = () => {
-  // ... (previous state variables and functions)
   const auth = getAuth();
   const db = getFirestore();
   const storage = getStorage();
@@ -67,7 +66,7 @@ const Profile = () => {
     }
 
     try {
-      // ... (previous profile saving logic)
+
       let profileImageUrl = '';
       if (profileImage) {
         const storageRef = ref(storage, `profile_images/${user.uid}`);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import 'chart.js/auto'; // Automatically register all components
+import 'chart.js/auto'; 
 import { useLocation } from 'react-router-dom';
 
 const Recommendation = () => {
@@ -22,22 +22,20 @@ const Recommendation = () => {
   }
 
   console.log('Recommendation Data:', { recommendation, futureSavings, savingsOverTime });
-
-  // Define symbols based on the recommendation type
   const getSymbol = (recommendation) => {
     switch (recommendation) {
       case 'Gold':
-        return '🏅'; // Gold symbol
+        return '🏅';
       case 'Stocks':
-        return '📈'; // Stock symbol
+        return '📈'; 
       case 'Mutual Funds':
-        return '💼'; // Mutual Funds symbol
+        return '💼'; 
       case 'Crypto currency':
-        return '💰'; // Crypto symbol
+        return '💰'; 
       case 'Real Estate':
-        return '🏡'; // Real Estate symbol
+        return '🏡'; 
       default:
-        return '🔍'; // Default symbol
+        return '🔍'; 
     }
   };
 
@@ -82,9 +80,7 @@ const Recommendation = () => {
             🕰️ No future savings data available.
           </h3>
         )}
-        
-        {/* Display savings graph */}
-        {savingsOverTime.length > 0 ? (
+                {savingsOverTime.length > 0 ? (
           <div className="mt-4">
             <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
           </div>
