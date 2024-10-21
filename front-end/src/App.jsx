@@ -10,6 +10,7 @@ import  Profile  from './components/Profile'
 import Logout from './components/Logout'
 import ForgotPassword from './components/ForgotPassword'
 import Discussion from './components/Discussion'
+import Recommendation from './components/Recommendation'
 const App = () => {
   return (
     <Routes>
@@ -23,6 +24,7 @@ const App = () => {
       <Route path='/logout' element={<Logout/>}/>
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/discussion" element={<Discussion />} />
+      <Route path="/recommendation" element={<Recommendation />} />
     </Routes>
   )
 }
