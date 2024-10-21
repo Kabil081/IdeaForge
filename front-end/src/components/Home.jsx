@@ -1,15 +1,18 @@
-import React from 'react'
-import Navbar from './Navbar'
-import Footer from "./Footer"
-import { Button } from './ui/Button'
-import Discussion from './Discussion'
+
+import React from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import Discussion from './Discussion';
+import ArticlesAndResources from './ArticlesandResoucrces';
 const Home = () => {
   return (
     <>
-      <Navbar/>
-      <Discussion/>
-      <Footer/>
+      <Navbar />
+      <Discussion />
+      <ArticlesAndResources/>
+      <Footer />
     </>
-  )
-}
+  );
+};
+
 export default Home;

@@ -14,7 +14,6 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { auth, db } from './firebase';
-
 const DiscussionForum = () => {
   const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
@@ -31,8 +30,6 @@ const DiscussionForum = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  // Auth listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -40,8 +37,6 @@ const DiscussionForum = () => {
     });
     return () => unsubscribe();
   }, []);
-
-  // Messages listener
   useEffect(() => {
     if (user) {
       const q = query(collection(db, 'messages'), orderBy('createdAt', 'asc'));

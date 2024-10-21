@@ -1,21 +1,33 @@
 import { useState } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const auth = getAuth();
+  const db = getFirestore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
+      // Get user data from Firestore
+      const userDoc = await getDoc(doc(db, 'profiles', userId));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        console.log('User data:', userData);
+        navigate('/'); // Navigate after fetching user data
+      } else {
+        console.error('No such document!');
+      }
     } catch (error) {
-      setError(error.message);
+      console.error('Sign-in error:', error);
+      setError('Failed to sign in. Please check your credentials.');
     }
   };
 

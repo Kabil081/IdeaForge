@@ -9,7 +9,7 @@ import SignUp from './components/SignUp'
 import  Profile  from './components/Profile'
 import Logout from './components/Logout'
 import ForgotPassword from './components/ForgotPassword'
-import Discussion from './components/Discussion'
+import Discussion from "./components/Discussion"
 const App = () => {
   return (
     <Routes>

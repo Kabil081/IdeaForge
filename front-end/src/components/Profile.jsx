@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import AddIcon from '@mui/icons-material/Add';
-
 const Profile = () => {
   const auth = getAuth();
   const db = getFirestore();
@@ -24,7 +22,6 @@ const Profile = () => {
   const [success, setSuccess] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -39,30 +36,25 @@ const Profile = () => {
       }
     });
   }, [auth, db]);
-  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
       setProfileImage(e.target.files[0]);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
     setLoading(true);
-
     if (!user) {
       setError('User not logged in');
       setLoading(false);
       return;
     }
-
     try {
       let profileImageUrl = '';
       if (profileImage) {
@@ -71,15 +63,12 @@ const Profile = () => {
         profileImageUrl = await getDownloadURL(storageRef);
         console.log('Profile image uploaded:', profileImageUrl);
       }
-
       const updatedData = {
         ...formData,
         profile: profileImageUrl || formData.profile,
       };
-
       await setDoc(doc(db, 'profiles', user.uid), updatedData);
       console.log('Profile data saved:', updatedData);
-
       setFormData(updatedData);
       setSuccess('Profile saved successfully!');
       setIsEditing(false);
@@ -89,7 +78,6 @@ const Profile = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex h-screen w-full justify-center items-center bg-gradient-to-r from-blue-500 to-green-500">
       <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-lg">
@@ -105,7 +93,6 @@ const Profile = () => {
               className="flex items-center justify-center w-[600px] h-12 border border-gray-300 rounded-md cursor-pointer"
               htmlFor="profile-upload"
             >
-              <AddIcon />
               <span className="ml-2 text-lg">Add/Change profile picture</span>
               <input
                 id="profile-upload"
