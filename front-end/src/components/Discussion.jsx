@@ -15,6 +15,8 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from './firebase';
 
+const topics = ['Stocks', 'Crypto', 'Gold', 'Mutual Funds', 'Real Estate'];
+
 const DiscussionForum = () => {
   const [user, setUser] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
@@ -22,8 +24,10 @@ const DiscussionForum = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(topics[0]);
   const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -32,7 +36,6 @@ const DiscussionForum = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Auth listener
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -41,7 +44,6 @@ const DiscussionForum = () => {
     return () => unsubscribe();
   }, []);
 
-  // Messages listener
   useEffect(() => {
     if (user) {
       const q = query(collection(db, 'messages'), orderBy('createdAt', 'asc'));
@@ -90,6 +92,7 @@ const DiscussionForum = () => {
         text: message,
         userId: user.uid,
         userEmail: user.email,
+        topic: selectedTopic,
         createdAt: serverTimestamp(),
       });
       setMessage('');
@@ -97,6 +100,8 @@ const DiscussionForum = () => {
       setError(err.message);
     }
   };
+
+  const filteredMessages = messages.filter(msg => msg.topic === selectedTopic);
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -167,15 +172,23 @@ const DiscussionForum = () => {
                       </button>
                     </div>
 
+                    <div className="flex justify-center mb-4">
+                      {topics.map((topic) => (
+                        <button
+                          key={topic}
+                          onClick={() => setSelectedTopic(topic)}
+                          className={`px-4 py-2 mx-1 rounded ${selectedTopic === topic ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                        >
+                          {topic}
+                        </button>
+                      ))}
+                    </div>
+
                     <div className="h-96 overflow-y-auto mb-4 border rounded p-4">
-                      {messages.map((msg) => (
+                      {filteredMessages.map((msg) => (
                         <div
                           key={msg.id}
-                          className={`mb-4 p-3 rounded ${
-                            msg.userId === user.uid
-                              ? 'bg-blue-100 ml-auto max-w-[80%]'
-                              : 'bg-gray-100 mr-auto max-w-[80%]'
-                          }`}
+                          className={`mb-4 p-3 rounded ${msg.userId === user.uid ? 'bg-blue-100 ml-auto max-w-[80%]' : 'bg-gray-100 mr-auto max-w-[80%]'}`}
                         >
                           <div className="text-sm text-gray-600 mb-1">{msg.userEmail}</div>
                           <div className="text-gray-800">{msg.text}</div>
