@@ -23,21 +23,20 @@ const Recommendation = () => {
 
   console.log('Recommendation Data:', { recommendation, futureSavings, savingsOverTime });
 
-  // Define symbols based on the recommendation type
   const getSymbol = (recommendation) => {
     switch (recommendation) {
       case 'Gold':
-        return '🏅'; // Gold symbol
+        return '🏅';
       case 'Stocks':
-        return '📈'; // Stock symbol
+        return '📈';
       case 'Mutual Funds':
-        return '💼'; // Mutual Funds symbol
+        return '💼';
       case 'Crypto currency':
-        return '💰'; // Crypto symbol
+        return '💰';
       case 'Real Estate':
-        return '🏡'; // Real Estate symbol
+        return '🏡';
       default:
-        return '🔍'; // Default symbol
+        return '🔍';
     }
   };
 
@@ -50,13 +49,14 @@ const Recommendation = () => {
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
+        tension: 0.4,
       }
     ]
   };
 
   return (
     <div className="flex min-h-screen w-full justify-center items-center bg-gradient-to-r from-blue-400 to-purple-500 p-6">
-      <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-lg max-w-xl w-full">
+      <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-lg max-w-4xl w-full">
         <h1 className="text-4xl font-extrabold text-center text-gray-800">Your Financial Recommendation</h1>
         
         <p className="text-lg text-gray-700 mb-4 text-center">
@@ -83,23 +83,154 @@ const Recommendation = () => {
           </h3>
         )}
         
-        {/* Display savings graph */}
         {savingsOverTime.length > 0 ? (
           <div className="mt-4">
-            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
+            <Line 
+              data={chartData} 
+              options={{ 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                      color: '#333',
+                      boxHeight: 10,
+                      padding: 20,
+                    },
+                  },
+                },
+              }} 
+              height={400} 
+            />
           </div>
         ) : (
           <p className="text-center text-gray-600 mt-4">📉 No savings data available.</p>
         )}
 
-        <p className="text-sm text-gray-500 mt-6 text-center">
-          Remember, every small step today can lead to a significant change tomorrow. 
-          Start investing in your future now!
-        </p>
-        
-        <p className="text-sm text-red-600 text-center mt-4">
-          ⚠️ This is not 100% guaranteed. Please invest at your own risk.
-        </p>
+        {/* Investment Flashcards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {/* Stocks Flashcard */}
+          <div className="bg-gradient-to-r from-green-400 to-green-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white">
+            <h3 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">📈</span> Stocks
+            </h3>
+            <p className="mt-2">Equities or shares in a company, offering potential for high returns.</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Pros:</h4>
+              <ul className="list-disc list-inside">
+                <li>High potential returns</li>
+                <li>Dividends provide income</li>
+                <li>Liquid assets</li>
+              </ul>
+            </div>
+            <div className="mt-2">
+              <h4 className="font-semibold">Cons:</h4>
+              <ul className="list-disc list-inside">
+                <li>Market volatility</li>
+                <li>Requires research</li>
+                <li>Risk of loss</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Gold Flashcard */}
+          <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white">
+            <h3 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">🏅</span> Gold
+            </h3>
+            <p className="mt-2">A precious metal traditionally used as a hedge against inflation.</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Pros:</h4>
+              <ul className="list-disc list-inside">
+                <li>Safe haven asset</li>
+                <li>Inflation hedge</li>
+                <li>Tangible asset</li>
+              </ul>
+            </div>
+            <div className="mt-2">
+              <h4 className="font-semibold">Cons:</h4>
+              <ul className="list-disc list-inside">
+                <li>No income generation</li>
+                <li>Storage costs</li>
+                <li>Market fluctuations</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Real Estate Flashcard */}
+          <div className="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white">
+            <h3 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">🏡</span> Real Estate
+            </h3>
+            <p className="mt-2">Investment in property, providing rental income and capital appreciation.</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Pros:</h4>
+              <ul className="list-disc list-inside">
+                <li>Stable cash flow</li>
+                <li>Tax advantages</li>
+                <li>Long-term appreciation</li>
+              </ul>
+            </div>
+            <div className="mt-2">
+              <h4 className="font-semibold">Cons:</h4>
+              <ul className="list-disc list-inside">
+                <li>High upfront costs</li>
+                <li>Maintenance required</li>
+                <li>Illiquid asset</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Cryptocurrency Flashcard */}
+          <div className="bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white">
+            <h3 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">💰</span> Cryptocurrency
+            </h3>
+            <p className="mt-2">Digital currencies with high potential but significant volatility.</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Pros:</h4>
+              <ul className="list-disc list-inside">
+                <li>High potential returns</li>
+                <li>Decentralized assets</li>
+                <li>Growing acceptance</li>
+              </ul>
+            </div>
+            <div className="mt-2">
+              <h4 className="font-semibold">Cons:</h4>
+              <ul className="list-disc list-inside">
+                <li>Market volatility</li>
+                <li>Regulatory risks</li>
+                <li>Technical knowledge required</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Mutual Funds Flashcard */}
+          <div className="bg-gradient-to-r from-red-400 to-red-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white md:col-span-2">
+            <h3 className="text-2xl font-bold flex items-center">
+              <span className="mr-2">💼</span> Mutual Funds
+            </h3>
+            <p className="mt-2">Pooled investment vehicles managed by professionals, offering diversification.</p>
+            <div className="mt-4">
+              <h4 className="font-semibold">Pros:</h4>
+              <ul className="list-disc list-inside">
+                <li>Diversification across various assets</li>
+                <li>Professional management</li>
+                <li>Liquidity</li>
+              </ul>
+            </div>
+            <div className="mt-2">
+              <h4 className="font-semibold">Cons:</h4>
+              <ul className="list-disc list-inside">
+                <li>Management fees</li>
+                <li>Less control over investments</li>
+                <li>Potential for lower returns than stocks</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
