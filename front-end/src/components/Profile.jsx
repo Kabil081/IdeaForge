@@ -75,23 +75,23 @@ const Profile = () => {
     setError(null);
     setSuccess(null);
     setLoading(true);
-
+  
     if (!user) {
       setError('User not logged in');
       setLoading(false);
       return;
     }
-
+  
     if (!validateFormData()) {
       setError('Please fill in all required fields.');
       setLoading(false);
       return;
     }
-
+  
     try {
       let profileImageUrl = '';
       if (profileImage) {
-        const storageRef = ref(storage, profile_images/${user.uid});
+        const storageRef = ref(storage, `profile_images/${user.uid}`); // Corrected line
         await uploadBytes(storageRef, profileImage);
         profileImageUrl = await getDownloadURL(storageRef);
       }
@@ -100,7 +100,7 @@ const Profile = () => {
         profile: profileImageUrl || formData.profile,
       };
       await setDoc(doc(db, 'profiles', user.uid), updatedData);
-
+  
       // Get investment recommendation and future savings
       const response = await axios.post('http://127.0.0.1:5000/api/recommend', {
         age: parseInt(formData.age),
@@ -112,16 +112,17 @@ const Profile = () => {
       setRecommendation(response.data.recommendation);
       setFutureSavings(Number(response.data.future_savings.toFixed(2)));
       setSavingsOverTime(response.data.savings_over_time);
-
+  
       setFormData(updatedData);
       setSuccess('Profile saved successfully!');
       setIsEditing(false);
     } catch (error) {
-      setError(Error saving profile: ${error.message});
+      setError(`Error saving profile: ${error.message}`); // Fixed error message syntax
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handleGetResults = () => {
     if (recommendation && futureSavings !== undefined && savingsOverTime) {
