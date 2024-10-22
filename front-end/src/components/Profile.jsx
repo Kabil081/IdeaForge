@@ -45,7 +45,7 @@ const Profile = () => {
         setError('Please log in to view your profile.');
       }
     });
-    return () => unsubscribe(); // Clean up subscription
+    return () => unsubscribe();
   }, [auth, db]);
 
   const handleChange = (e) => {
@@ -150,7 +150,7 @@ const Profile = () => {
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full text-sm text-gray-500 flex items-center
+            className="block w-full text-sm text-gray-500 flex items-center
                        file:mr-4 file:py-2 file:px-4 
                        file:rounded-lg file:border-0
                        file:text-sm file:font-semibold 

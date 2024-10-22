@@ -22,25 +22,21 @@ const Recommendation = () => {
   }
 
   console.log('Recommendation Data:', { recommendation, futureSavings, savingsOverTime });
+
   const getSymbol = (recommendation) => {
     switch (recommendation) {
       case 'Gold':
         return '🏅';
       case 'Stocks':
         return '📈';
-        return '📈'; 
       case 'Mutual Funds':
         return '💼';
-        return '💼'; 
       case 'Crypto currency':
         return '💰';
-        return '💰'; 
       case 'Real Estate':
         return '🏡';
-        return '🏡'; 
       default:
         return '🔍';
-        return '🔍'; 
     }
   };
 
@@ -88,7 +84,6 @@ const Recommendation = () => {
         )}
         
         {savingsOverTime.length > 0 ? (
-                {savingsOverTime.length > 0 ? (
           <div className="mt-4">
             <Line 
               data={chartData} 
