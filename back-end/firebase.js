@@ -3,21 +3,15 @@ const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
-
 const app = express();
 const port =5000;
-
 const serviceAccount = require('./serviceAccountKey.json');
-
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-
 app.use(cors());
 app.use(bodyParser.json());
-
 const db = admin.firestore();
-
 const authenticateUser = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -33,8 +27,6 @@ const authenticateUser = async (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
-
-
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -58,7 +50,6 @@ app.post('/signup', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
 app.post('/signin', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -74,8 +65,6 @@ app.post('/signin', async (req, res) => {
     res.status(401).json({ error: 'Invalid credentials' });
   }
 });
-
-// Profile routes
 app.get('/profile', authenticateUser, async (req, res) => {
   const { userId } = req.query;
   if (!userId) {
@@ -91,7 +80,6 @@ app.get('/profile', authenticateUser, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 app.post('/profile', authenticateUser, async (req, res) => {
   const { name, age, income, savings, retirement_age, retirement_savings, risk_tolerance, userId } = req.body;
   if (!userId) {
@@ -120,7 +108,6 @@ app.post('/messages', authenticateUser, async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 });
-
 app.get('/messages', authenticateUser, async (req, res) => {
   try {
     const messagesSnapshot = await db.collection('messages').orderBy('createdAt').get();
@@ -133,7 +120,6 @@ app.get('/messages', authenticateUser, async (req, res) => {
     res.status(400).send({ error: error.message });
   }
 });
-
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });

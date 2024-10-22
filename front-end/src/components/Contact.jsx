@@ -6,7 +6,7 @@ import Sendmail from "./Sendmail";
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [visibleAnswerIndex, setVisibleAnswerIndex] = useState(null);
-  const [isSendmailOpen, setIsSendmailOpen] = useState(false); // State for Sendmail popup
+  const [isSendmailOpen, setIsSendmailOpen] = useState(false);
 
   const display = () => {
     setIsVisible(!isVisible);
@@ -53,7 +53,6 @@ const Contact = () => {
 
       {isVisible && (
         <div className="flex flex-col p-10 bg-slate-200">
-          {/* Question 1 */}
           <div className="border-slate-950 border-2 rounded-lg p-10 mb-5 bg-white">
             <div className='flex w-full justify-between items-center'>
               <h1 className="text-xl font-bold">
@@ -74,7 +73,7 @@ const Contact = () => {
             )}
           </div>
 
-          {/* Question 2 */}
+    
           <div className="border-black border-2 rounded-lg p-10 mb-5 bg-white">
             <div className='flex w-full justify-between items-center'>
               <h1 className="text-xl font-bold">2. How accurate are the predictions?</h1>
@@ -94,7 +93,6 @@ const Contact = () => {
             )}
           </div>
 
-          {/* Question 3 */}
           <div className="border-black border-2 rounded-lg p-10 mb-5 bg-white">
             <div className='flex w-full justify-between items-center'>
               <h1 className="text-xl font-bold">
@@ -116,7 +114,6 @@ const Contact = () => {
             )}
           </div>
 
-          {/* Question 4 */}
           <div className="border-black border-2 rounded-lg p-10 mb-5 bg-white">
             <div className='flex w-full justify-between items-center'>
               <h1 className="text-xl font-bold">
@@ -137,8 +134,6 @@ const Contact = () => {
               </h2>
             )}
           </div>
-
-          {/* Question 5 */}
           <div className="border-black border-2 rounded-lg p-10 mb-5 bg-white">
             <div className='flex w-full justify-between items-center'>
               <h1 className="text-xl font-bold">

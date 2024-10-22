@@ -9,7 +9,6 @@ import numpy as np
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
 
-# Load the trained model
 model_filename = 'trained_model.joblib'
 model_path = os.path.join(os.path.dirname(__file__), model_filename)
 
@@ -24,7 +23,6 @@ else:
 def home():
     return "Welcome to the Investment Recommendation API"
 
-# Helper function to calculate future savings with investment
 def calculate_future_savings(current_savings, monthly_contribution, years_to_retirement, annual_return_rate):
     months = years_to_retirement * 12
     future_savings = current_savings
@@ -35,7 +33,6 @@ def calculate_future_savings(current_savings, monthly_contribution, years_to_ret
         savings_over_time.append(future_savings)
     return future_savings, savings_over_time
 
-# Return investment recommendation and future savings
 @app.route('/api/recommend', methods=['POST'])
 def recommend_investment():
     if model is None:
@@ -45,7 +42,7 @@ def recommend_investment():
     print("Received data:", data)
     
     try:
-        # Prepare the input data
+      
         input_data = pd.DataFrame([[
             data['age'],
             data['current_savings'],
@@ -54,14 +51,13 @@ def recommend_investment():
             data['risk_tolerance']
         ]], columns=['age', 'current_savings', 'monthly_contribution', 'years_to_retirement', 'risk_tolerance'])
         
-        # Make prediction
+ 
         prediction = model.predict(input_data)[0]
         
-        # Map the prediction to investment category
+   
         investment_options = {0: 'Mutual funds', 1: 'Gold', 2: 'Real estate', 3: 'Stock market', 4: 'Crypto currency'}
         recommended_investment = investment_options[prediction]
         
-        # Define expected annual return rates for each investment option
         return_rates = {
             'Mutual funds': 0.07,
             'Gold': 0.05,

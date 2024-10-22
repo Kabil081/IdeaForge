@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import 'chart.js/auto'; // Automatically register all components
+import 'chart.js/auto'; 
 import { useLocation } from 'react-router-dom';
 
 const Recommendation = () => {
@@ -22,21 +22,25 @@ const Recommendation = () => {
   }
 
   console.log('Recommendation Data:', { recommendation, futureSavings, savingsOverTime });
-
   const getSymbol = (recommendation) => {
     switch (recommendation) {
       case 'Gold':
         return '🏅';
       case 'Stocks':
         return '📈';
+        return '📈'; 
       case 'Mutual Funds':
         return '💼';
+        return '💼'; 
       case 'Crypto currency':
         return '💰';
+        return '💰'; 
       case 'Real Estate':
         return '🏡';
+        return '🏡'; 
       default:
         return '🔍';
+        return '🔍'; 
     }
   };
 
@@ -84,6 +88,7 @@ const Recommendation = () => {
         )}
         
         {savingsOverTime.length > 0 ? (
+                {savingsOverTime.length > 0 ? (
           <div className="mt-4">
             <Line 
               data={chartData} 
