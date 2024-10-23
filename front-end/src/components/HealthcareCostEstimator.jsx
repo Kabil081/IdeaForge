@@ -69,7 +69,7 @@ const HealthcareCostEstimator = () => {
       </div>
 
       <div className="mb-4">
-        <label className="block mb-1">Current Savings ($):</label>
+        <label className="block mb-1">Current Savings (₹):</label>
         <input
           type="number"
           placeholder="e.g., 50000"
@@ -99,7 +99,7 @@ const HealthcareCostEstimator = () => {
       {estimatedCosts !== null && (
         <div className="mt-4 p-4 bg-green-100 rounded">
           <h2 className="text-lg font-semibold">Estimated Healthcare Costs:</h2>
-          <p className="text-xl font-bold">${estimatedCosts.toFixed(2)}</p>
+          <p className="text-xl font-bold">₹{estimatedCosts.toFixed(2)}</p>
         </div>
       )}
     </div>
