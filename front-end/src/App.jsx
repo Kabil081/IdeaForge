@@ -11,6 +11,7 @@ import Logout from './components/Logout'
 import ForgotPassword from './components/ForgotPassword'
 import Discussion from './components/Discussion'
 import Recommendation from './components/Recommendation'
+import HealthcareCostEstimator from './components/HealthcareCostEstimator'
 const App = () => {
   return (
     <Routes>
@@ -25,6 +26,7 @@ const App = () => {
       <Route path="/forgot-password" element={<ForgotPassword/>}/>
       <Route path="/discussion" element={<Discussion />} />
       <Route path="/recommendation" element={<Recommendation />} />
+      <Route path="/health" element={<HealthcareCostEstimator/>}/>
     </Routes>
   )
 }

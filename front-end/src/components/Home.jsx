@@ -64,11 +64,10 @@ const Home = () => {
             </div>
             <h3 className="text-2xl font-semibold mb-2">Healthcare</h3>
             <p className="text-gray-600 mb-4">Health is wealth.Plan for rising healthcare costs and safeguard your savings.</p>
-            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700">Estimate Costs</Button>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/health')}>Estimate Costs</Button>
           </div>
         </div>
       </div>
-      <HealthcareCostEstimator/>
       <Footer/>
     </>
   );
