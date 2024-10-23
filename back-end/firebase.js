@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 const db = admin.firestore();
 const authenticateUser = async (req, res, next) => {
-  try {
+  try{
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ error: 'No token provided' });
@@ -27,6 +27,35 @@ const authenticateUser = async (req, res, next) => {
     res.status(401).json({ error: 'Invalid token' });
   }
 };
+const axios = require('axios');
+const fetchStockData = async (symbol) => {
+  try {
+    const apiKey = process.env.ALPHA_VANTAGE_API_KEY; 
+    const response = await axios.get(`https://www.alphavantage.co/query`, {
+      params: {
+        function: 'TIME_SERIES_INTRADAY',
+        symbol: symbol,
+        interval: '1min',
+        apikey: apiKey
+      }
+    });
+    const data = response.data['Time Series (1min)'];
+    if (!data) {
+      throw new Error(`No data found for symbol: ${symbol}`);
+    }
+    const latestTimestamp = Object.keys(data)[0];
+    const latestData = data[latestTimestamp];
+    return {
+      symbol: symbol,
+      price: parseFloat(latestData['1. open']),
+      change: parseFloat(latestData['4. close']) - parseFloat(latestData['1. open'])
+    };
+  } catch (error) {
+    console.error(`Error fetching data for ${symbol}: ${error.message}`);
+    return null;
+  }
+};
+
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
   try {

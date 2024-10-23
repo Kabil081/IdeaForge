@@ -27,7 +27,7 @@ const DiscussionForum = () => {
   const [selectedTopic, setSelectedTopic] = useState(topics[0]);
   const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
-  const speechRecognitionRef = useRef(null); // Ref for speech recognition
+  const speechRecognitionRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -62,7 +62,6 @@ const DiscussionForum = () => {
   const handleAuth = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
@@ -87,7 +86,6 @@ const DiscussionForum = () => {
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim() || !user) return;
-
     try {
       await addDoc(collection(db, 'messages'), {
         text: message,
@@ -104,16 +102,14 @@ const DiscussionForum = () => {
 
   const filteredMessages = messages.filter((msg) => msg.topic === selectedTopic);
 
-  // Function to handle speech recognition
   const handleStartListening = () => {
     if (!('webkitSpeechRecognition' in window)) {
       alert('Speech recognition not supported in this browser.');
       return;
     }
-
     const SpeechRecognition = window.webkitSpeechRecognition;
     const recognition = new SpeechRecognition();
-    speechRecognitionRef.current = recognition; // Store reference
+    speechRecognitionRef.current = recognition;
 
     recognition.onstart = () => {
       console.log('Voice recognition started. Try speaking into the microphone.');
@@ -121,7 +117,7 @@ const DiscussionForum = () => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-      setMessage(transcript); // Set the recognized text as message
+      setMessage(transcript);
       console.log('Recognized text:', transcript);
     };
 
@@ -134,7 +130,7 @@ const DiscussionForum = () => {
       console.log('Voice recognition ended.');
     };
 
-    recognition.start(); // Start recognition
+    recognition.start();
   };
 
   return (
@@ -147,7 +143,6 @@ const DiscussionForum = () => {
                 <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
                   Discussion Forum
                 </h1>
-
                 {error && (
                   <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
                     {error}
@@ -159,17 +154,13 @@ const DiscussionForum = () => {
                     <div className="flex justify-center space-x-4 mb-4">
                       <button
                         onClick={() => setIsLogin(true)}
-                        className={`px-4 py-2 rounded ${
-                          isLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                        }`}
+                        className={`px-4 py-2 rounded ${isLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                       >
                         Login
                       </button>
                       <button
                         onClick={() => setIsLogin(false)}
-                        className={`px-4 py-2 rounded ${
-                          !isLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                        }`}
+                        className={`px-4 py-2 rounded ${!isLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                       >
                         Register
                       </button>
@@ -211,35 +202,42 @@ const DiscussionForum = () => {
                         Sign Out
                       </button>
                     </div>
-
                     <div className="flex justify-center mb-4">
                       {topics.map((topic) => (
                         <button
                           key={topic}
                           onClick={() => setSelectedTopic(topic)}
-                          className={`px-4 py-2 mx-1 rounded ${
-                            selectedTopic === topic ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                          }`}
+                          className={`px-4 py-2 mx-1 rounded ${selectedTopic === topic ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                         >
                           {topic}
                         </button>
                       ))}
                     </div>
-
                     <div className="h-96 overflow-y-auto mb-4 border rounded p-4">
-                      {filteredMessages.map((msg) => (
-                        <div
-                          key={msg.id}
-                          className={`mb-4 p-3 rounded ${
-                            msg.userId === user.uid
-                              ? 'bg-blue-100 ml-auto max-w-[80%]'
-                              : 'bg-gray-100 mr-auto max-w-[80%]'
-                          }`}
-                        >
-                          <div className="text-sm text-gray-600 mb-1">{msg.userEmail}</div>
-                          <div className="text-gray-800">{msg.text}</div>
-                        </div>
-                      ))}
+                      {filteredMessages.map((msg) => {
+                        const createdAt = msg.createdAt?.toDate();
+                        const isValidDate = createdAt && !isNaN(createdAt.getTime());
+
+                        return (
+                          <div
+                            key={msg.id}
+                            className={`mb-4 p-3 rounded ${
+                              msg.userId === user.uid ? 'bg-blue-100 ml-auto max-w-[80%]' : 'bg-gray-100 mr-auto max-w-[80%]'
+                            }`}
+                          >
+                            <div className="text-sm text-gray-600 mb-1">{msg.userEmail}</div>
+                            <div className="text-gray-800">{msg.text}</div>
+                            {isValidDate && (
+                              <div className="text-xs text-gray-500 mt-1">
+                                {createdAt.toLocaleString()}
+                              </div>
+                            )}
+                            {!isValidDate && (
+                              <div className="text-xs text-red-500 mt-1">Invalid date</div>
+                            )}
+                          </div>
+                        );
+                      })}
                       <div ref={messagesEndRef} />
                     </div>
 
@@ -252,11 +250,11 @@ const DiscussionForum = () => {
                         className="flex-1 px-3 py-2 border rounded"
                       />
                       <button
-                        type="button" // Change this to type="button"
-                        onClick={handleStartListening} // Handle speech recognition
+                        type="button"
+                        onClick={handleStartListening}
                         className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 flex items-center"
                       >
-                        🎙️ {/* You can use an icon or emoji for the mic */}
+                        🎙️
                       </button>
                       <button
                         type="submit"

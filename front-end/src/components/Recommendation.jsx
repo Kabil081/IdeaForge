@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import 'chart.js/auto'; // Automatically register all components
+import 'chart.js/auto';
 import { useLocation } from 'react-router-dom';
 
 const Recommendation = () => {
@@ -206,8 +206,6 @@ const Recommendation = () => {
               </ul>
             </div>
           </div>
-
-          {/* Mutual Funds Flashcard */}
           <div className="bg-gradient-to-r from-red-400 to-red-600 rounded-lg shadow-md p-6 transition-transform transform hover:scale-105 hover:shadow-lg text-white md:col-span-2">
             <h3 className="text-2xl font-bold flex items-center">
               <span className="mr-2">💼</span> Mutual Funds

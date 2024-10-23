@@ -65,8 +65,6 @@ def recommend_investment():
             'Stock market': 0.10,
             'Crypto currency': 0.15
         }
-        
-        # Calculate future savings with the recommended investment
         annual_return_rate = return_rates[recommended_investment]
         future_savings, savings_over_time = calculate_future_savings(
             data['current_savings'], 
@@ -74,7 +72,6 @@ def recommend_investment():
             data['years_to_retirement'], 
             annual_return_rate
         )
-        
         return jsonify({
             'recommendation': recommended_investment,
             'future_savings': future_savings,
