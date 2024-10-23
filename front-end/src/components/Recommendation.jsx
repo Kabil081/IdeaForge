@@ -339,6 +339,7 @@ export default function Recommendation() {
                   <li>Use UPI/bank transfer for deposits</li>
                   <li>Secure with 2FA authentication</li>
                   <a href='https://www.binance.com/' className='font-thin text-[blue]'>Go to google</a>
+                  <a href='https://www.binance.com/' className='font-thin text-[blue]'>Go to google</a>
                 </ul>
               </div>
             </div>
