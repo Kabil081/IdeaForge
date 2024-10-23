@@ -9,6 +9,7 @@ import literacyImage from './images/literacy.png';
 import healthcareImage from './images/healthcare.png';
 import { Navigate, useNavigate } from 'react-router';
 import HealthcareCostEstimator from './HealthcareCostEstimator';
+
 const Home = () => {
   const navigate=useNavigate();
   return (
@@ -70,9 +71,9 @@ const Home = () => {
             <div className="w-full h-32 mb-4">
               <img src={healthcareImage} alt="Healthcare Costs" className="rounded-lg object-contain w-full h-full" />
             </div>
-            <h3 className="text-2xl font-semibold mb-2">Market Analysis</h3>
-            <p className="text-gray-600 mb-4">Biggest Risk in life is not taking any risks.</p>
-            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/stock') }>Estimate Costs</Button>
+            <h3 className="text-2xl font-semibold mb-2">Plan a goal</h3>
+            <p className="text-gray-600 mb-4">Health is wealth.Plan for rising healthcare costs and safeguard your savings.</p>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/Goal') }>Plan now </Button>
           </div>
         </div>
       </div>
