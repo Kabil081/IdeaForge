@@ -199,10 +199,9 @@ const Profile = () => {
         >
           Edit
         </button>
-
         <button
           className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
-          onClick={handleGetResults}
+          onClick={()=>navigate('/recommendation')}
         >
           Get Results
         </button>
@@ -210,9 +209,6 @@ const Profile = () => {
     )}
   </div>
 </div>
-
-
   );
 };
-
 export default Profile;

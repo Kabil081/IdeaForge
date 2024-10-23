@@ -1,237 +1,246 @@
 import React, { useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import 'chart.js/auto';
-import { useLocation } from 'react-router-dom';
-import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
-
-const Recommendation = () => {
-  const location = useLocation();
-  const { recommendation, futureSavings, savingsOverTime = [] } = location.state || {};
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ArrowUpRight, ArrowDownRight, IndianRupee, TrendingUp, Calendar, Wallet } from 'lucide-react';
+const formatCurrency = (value) => {
+  if (value >= 10000000) {
+    return `₹${(value / 10000000).toFixed(2)}Cr`;
+  } else if (value >= 100000) {
+    return `₹${(value / 100000).toFixed(2)}L`;
+  }
+  return `₹${value.toLocaleString('en-IN')}`;
+};
+const calculateReturns = (principal, monthlyInvestment, yearlyInvestment, years, rate) => {
+  let total = principal;
+  const dataPoints = [];
+  
+  for (let year = 0; year <= years; year++) {
+    dataPoints.push({
+      year,
+      amount: total,
+    });
+    for (let month = 0; month < 12; month++) {
+      total += monthlyInvestment;
+      total *= (1 + rate / 12);
+    }
+    
+    total += yearlyInvestment;
+  }
+  
+  return dataPoints;
+};
+export default function Recommendation() {
+  const [formData, setFormData] = useState({
+    age: 30,
+    retirementAge: 60,
+    currentSavings: 1000000,
+    monthlyInvestment: 10000,
+    yearlyInvestment: 100000,
+    riskTolerance: 3
+  });
+  const [recommendation, setRecommendation] = useState(null);
   const [marketData, setMarketData] = useState({
-    sensex: null,
-    nifty: null,
-    gold: null,
-    crypto: null,
-    loading: true
+    sensex: { value: 72500, change: 1.2 },
+    nifty: { value: 22000, change: 0.8 },
+    gold: { price: 63000, change: 0.5 },
+    crypto: { 
+      bitcoin: { price: 5500000, change: 2.3 },
+      ethereum: { price: 280000, change: 1.8 }
+    }
   });
 
-  // Fetch crypto prices
   useEffect(() => {
-    const fetchCryptoData = async () => {
-      try {
-        const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=inr&include_24hr_change=true'
-        );
-        const data = await response.json();
-        return {
-          bitcoin: {
-            price: data.bitcoin.inr,
-            change: data.bitcoin.inr_24h_change
-          },
-          ethereum: {
-            price: data.ethereum.inr,
-            change: data.ethereum.inr_24h_change
-          }
-        };
-      } catch (error) {
-        console.error('Error fetching crypto data:', error);
-        return null;
-      }
+    const years = formData.retirementAge - formData.age;
+    const riskBasedReturns = {
+      1: { type: 'Gold', rate: 0.08 },
+      2: { type: 'Mutual Funds', rate: 0.12 },
+      3: { type: 'Stocks', rate: 0.15 },
+      4: { type: 'Crypto', rate: 0.20 }
     };
-
-    const fetchMarketData = async () => {
-      // In a real application, you would fetch this data from appropriate APIs
-      // Using sample data for demonstration
-      const crypto = await fetchCryptoData();
-      
-      setMarketData({
-        sensex: {
-          value: 72500,
-          change: 1.2
-        },
-        nifty: {
-          value: 22000,
-          change: 0.8
-        },
-        gold: {
-          price: 63000, // 24K Gold price per 10g in INR
-          change: 0.5,
-          silverPrice: 75000, // per kg in INR
-          silverChange: -0.3
-        },
-        crypto: crypto,
-        loading: false
-      });
-    };
-
-    const interval = setInterval(fetchMarketData, 60000); // Update every minute
-    fetchMarketData(); // Initial fetch
-
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!location.state) {
-    return (
-      <div className="flex min-h-screen w-full justify-center items-center bg-gradient-to-r from-blue-400 to-purple-500 p-6">
-        <div className="flex flex-col gap-6 bg-white p-10 rounded-lg shadow-lg max-w-lg w-full">
-          <h1 className="text-3xl font-extrabold text-center text-gray-800">Oops!</h1>
-          <p className="text-lg text-gray-600 text-center">
-            We couldn't retrieve your recommendation data. 
-            Please go back to the profile page and try again.
-          </p>
-        </div>
-      </div>
+    const recommendedInvestment = riskBasedReturns[formData.riskTolerance];
+    const projectedReturns = calculateReturns(
+      formData.currentSavings,
+      formData.monthlyInvestment,
+      formData.yearlyInvestment,
+      years,
+      recommendedInvestment.rate
     );
-  }
+    setRecommendation({
+      type: recommendedInvestment.type,
+      returns: projectedReturns,
+      totalAmount: projectedReturns[projectedReturns.length - 1].amount
+    });
+  }, [formData]);
 
-  const getSymbol = (recommendation) => {
-    switch (recommendation) {
-      case 'Gold':
-        return '🏅';
-      case 'Stocks':
-        return '📈';
-      case 'Mutual Funds':
-        return '💼';
-      case 'Crypto currency':
-        return '💰';
-      default:
-        return '🔍';
-    }
-  };
-
-  const formatNumber = (num) => {
-    if (num >= 100000) {
-      return `₹${(num/100000).toFixed(2)}L`;
-    }
-    return `₹${num.toLocaleString('en-IN')}`;
-  };
-
-  const PriceChange = ({ value }) => {
-    const isPositive = value > 0;
-    return (
-      <span className={`flex items-center ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-        {isPositive ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-        {Math.abs(value).toFixed(2)}%
-      </span>
-    );
-  };
-
-  const chartData = {
-    labels: savingsOverTime.length > 0 ? savingsOverTime.map((_, index) => index) : [],
-    datasets: [
-      {
-        label: 'Future Savings Over Time',
-        data: savingsOverTime,
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: true,
-        tension: 0.4,
-      }
-    ]
-  };
+  const PriceChange = ({ value }) => (
+    <span className={`flex items-center ${value >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+      {value >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+      {Math.abs(value).toFixed(2)}%
+    </span>
+  );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-blue-400 to-purple-500 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white p-8 rounded-lg shadow-lg mb-6">
-          <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-6">Your Financial Recommendation</h1>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 p-6 rounded-lg">
-              {recommendation && (
-                <h2 className="text-xl font-semibold text-green-600 text-center mb-4">
-                  {getSymbol(recommendation)} Recommended Investment: <span className="text-gray-800">{recommendation}</span>
-                </h2>
-              )}
-              
-              {futureSavings !== undefined && (
-                <h3 className="text-lg text-gray-700 text-center mb-4">
-                  💰 Future Savings at Retirement: <span className="font-bold">₹ {futureSavings}</span>
-                </h3>
-              )}
-              
-              {savingsOverTime.length > 0 && (
-                <div className="h-[300px]">
-                  <Line 
-                    data={chartData} 
-                    options={{ 
-                      responsive: true, 
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          display: true,
-                          position: 'top',
-                        },
-                      },
-                    }}
-                  />
-                </div>
-              )}
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-2xl font-bold mb-4">Investment Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Current Age</label>
+              <input
+                type="number"
+                value={formData.age}
+                onChange={(e) => setFormData({...formData, age: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
             </div>
-
-            <div className="bg-gray-50 p-6 rounded-lg">
-              <h3 className="text-xl font-semibold mb-4">Live Market Overview</h3>
-              {marketData.loading ? (
-                <div className="text-center py-4">Loading market data...</div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Sensex</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.sensex.value)}</span>
-                        <PriceChange value={marketData.sensex.change} />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium">Nifty 50</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.nifty.value)}</span>
-                        <PriceChange value={marketData.nifty.change} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Precious Metals (Live)</h4>
-                    <div className="flex justify-between items-center">
-                      <span>Gold (24K/10g)</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.gold.price)}</span>
-                        <PriceChange value={marketData.gold.change} />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Silver (1kg)</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.gold.silverPrice)}</span>
-                        <PriceChange value={marketData.gold.silverChange} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold">Cryptocurrency (Live)</h4>
-                    <div className="flex justify-between items-center">
-                      <span>Bitcoin (BTC)</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.crypto?.bitcoin.price)}</span>
-                        <PriceChange value={marketData.crypto?.bitcoin.change} />
-                      </div>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Ethereum (ETH)</span>
-                      <div className="flex items-center gap-3">
-                        <span>{formatNumber(marketData.crypto?.ethereum.price)}</span>
-                        <PriceChange value={marketData.crypto?.ethereum.change} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Retirement Age</label>
+              <input
+                type="number"
+                value={formData.retirementAge}
+                onChange={(e) => setFormData({...formData, retirementAge: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Current Savings</label>
+              <input
+                type="number"
+                value={formData.currentSavings}
+                onChange={(e) => setFormData({...formData, currentSavings: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Monthly Investment</label>
+              <input
+                type="number"
+                value={formData.monthlyInvestment}
+                onChange={(e) => setFormData({...formData, monthlyInvestment: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Yearly Investment</label>
+              <input
+                type="number"
+                value={formData.yearlyInvestment}
+                onChange={(e) => setFormData({...formData, yearlyInvestment: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Risk Tolerance (1-4)</label>
+              <input
+                type="number"
+                min="1"
+                max="4"
+                value={formData.riskTolerance}
+                onChange={(e) => setFormData({...formData, riskTolerance: parseInt(e.target.value)})}
+                className="w-full p-2 border rounded"
+              />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Recommendation Section */}
+        {recommendation && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-bold mb-4">Your Investment Recommendation</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h3 className="text-lg font-semibold">Recommended Investment</h3>
+                  <p className="text-3xl font-bold text-blue-600">{recommendation.type}</p>
+                </div>
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <h3 className="text-lg font-semibold">Projected Total at Retirement</h3>
+                  <p className="text-3xl font-bold text-green-600">
+                    {formatCurrency(recommendation.totalAmount)}
+                  </p>
+                </div>
+              </div>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={recommendation.returns}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" label={{ value: 'Years', position: 'bottom' }} />
+                    <YAxis 
+                      tickFormatter={(value) => formatCurrency(value)}
+                      width={100}
+                    />
+                    <Tooltip 
+                      formatter={(value) => [formatCurrency(value), "Amount"]}
+                      labelFormatter={(label) => `Year ${label}`}
+                    />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="amount" 
+                      stroke="#2563eb" 
+                      name="Projected Growth"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-2xl font-bold mb-4">Market Overview</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="space-y-4">
+              <h3 className="font-semibold">Stock Market</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>Sensex</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(marketData.sensex.value)}</span>
+                    <PriceChange value={marketData.sensex.change} />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Nifty</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(marketData.nifty.value)}</span>
+                    <PriceChange value={marketData.nifty.change} />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="font-semibold">Gold</h3>
+              <div className="flex justify-between items-center">
+                <span>Per 10g</span>
+                <div className="flex items-center gap-2">
+                  <span>{formatCurrency(marketData.gold.price)}</span>
+                  <PriceChange value={marketData.gold.change} />
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <h3 className="font-semibold">Cryptocurrency</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span>Bitcoin</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(marketData.crypto.bitcoin.price)}</span>
+                    <PriceChange value={marketData.crypto.bitcoin.change} />
+                  </div>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Ethereum</span>
+                  <div className="flex items-center gap-2">
+                    <span>{formatCurrency(marketData.crypto.ethereum.price)}</span>
+                    <PriceChange value={marketData.crypto.ethereum.change} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h3 className="text-2xl font-bold flex items-center mb-4">
               <span className="mr-2">🏅</span> Gold Investment
@@ -329,15 +338,13 @@ const Recommendation = () => {
                   <li>Start with top coins (BTC/ETH)</li>
                   <li>Use UPI/bank transfer for deposits</li>
                   <li>Secure with 2FA authentication</li>
-                  <a href='https://binomo-investment.com/' className='font-thin text-[blue]'>Go to google</a>
+                  <a href='https://www.binance.com/' className='font-thin text-[blue]'>Go to google</a>
                 </ul>
               </div>
             </div>
           </div>
         </div>
-      </div>
     </div>
+    
   );
-};
-
-export default Recommendation;
+}

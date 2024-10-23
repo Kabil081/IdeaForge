@@ -28,55 +28,107 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 const axios = require('axios');
-const fetchStockData = async (symbol) => {
+const fetchStockData = async () => {
+  const alphaVantageApiKey = process.env.ALPHA_VANTAGE_API_KEY;
+  const sensexUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=BSE:SENSEX&apikey=${alphaVantageApiKey}`;
+  const niftyUrl = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=BSE:NIFTY&apikey=${alphaVantageApiKey}`;
+
   try {
-    const apiKey = process.env.ALPHA_VANTAGE_API_KEY; 
-    const response = await axios.get(`https://www.alphavantage.co/query`, {
-      params: {
-        function: 'TIME_SERIES_INTRADAY',
-        symbol: symbol,
-        interval: '1min',
-        apikey: apiKey
-      }
-    });
-    const data = response.data['Time Series (1min)'];
-    if (!data) {
-      throw new Error(`No data found for symbol: ${symbol}`);
-    }
-    const latestTimestamp = Object.keys(data)[0];
-    const latestData = data[latestTimestamp];
+    const sensexResponse = await axios.get(sensexUrl);
+    const niftyResponse = await axios.get(niftyUrl);
+
+    const sensexData = sensexResponse.data["Time Series (Daily)"];
+    const niftyData = niftyResponse.data["Time Series (Daily)"];
+
+    const latestSensex = sensexData[Object.keys(sensexData)[0]];
+    const latestNifty = niftyData[Object.keys(niftyData)[0]];
+
     return {
-      symbol: symbol,
-      price: parseFloat(latestData['1. open']),
-      change: parseFloat(latestData['4. close']) - parseFloat(latestData['1. open'])
+      sensex: {
+        value: latestSensex["4. close"],
+        change: ((latestSensex["4. close"] - latestSensex["1. open"]) / latestSensex["1. open"]) * 100
+      },
+      nifty: {
+        value: latestNifty["4. close"],
+        change: ((latestNifty["4. close"] - latestNifty["1. open"]) / latestNifty["1. open"]) * 100
+      }
     };
   } catch (error) {
-    console.error(`Error fetching data for ${symbol}: ${error.message}`);
+    console.error("Error fetching stock data:", error);
     return null;
   }
 };
 
-app.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
+// Function to fetch Gold and Silver data from Metals API
+const fetchGoldSilverData = async () => {
+  const metalsApiKey = process.env.METALS_API_KEY;
+  const url = `https://metals-api.com/api/latest?access_key=${metalsApiKey}&base=INR&symbols=XAU,XAG`;
+
   try {
-    const userRecord = await admin.auth().createUser({
-      email,
-      password,
-      emailVerified: false
-    });
-    await db.collection('users').doc(userRecord.uid).set({
-      email: userRecord.email,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
-    const customToken = await admin.auth().createCustomToken(userRecord.uid);
-    res.status(201).json({
-      message: 'User created successfully',
-      uid: userRecord.uid,
-      token: customToken
+    const response = await axios.get(url);
+    const data = response.data;
+
+    return {
+      gold: {
+        price: data.rates.XAU, // Gold price per gram
+        change: null  // Add logic for price change if needed
+      },
+      silver: {
+        price: data.rates.XAG, // Silver price per gram
+        change: null  // Add logic for price change if needed
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching gold/silver data:", error);
+    return null;
+  }
+};
+
+// Function to fetch cryptocurrency data from CoinGecko API
+const fetchCryptoData = async () => {
+  const url = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=inr';
+
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+
+    return {
+      bitcoin: {
+        price: data.bitcoin.inr,
+        change: null  // Add logic for price change if needed
+      },
+      ethereum: {
+        price: data.ethereum.inr,
+        change: null  // Add logic for price change if needed
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching crypto data:", error);
+    return null;
+  }
+};
+
+// Combine all the data fetching into one API endpoint
+app.get('/api/market-data', async (req, res) => {
+  try {
+    const [stockData, goldSilverData, cryptoData] = await Promise.all([
+      fetchStockData(),
+      fetchGoldSilverData(),
+      fetchCryptoData()
+    ]);
+
+    if (!stockData || !goldSilverData || !cryptoData) {
+      return res.status(500).json({ message: "Error fetching market data" });
+    }
+
+    res.json({
+      stock: stockData,
+      metals: goldSilverData,
+      crypto: cryptoData
     });
   } catch (error) {
-    console.error('Signup Error:', error);
-    res.status(400).json({ error: error.message });
+    console.error("Error in API:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 app.post('/signin', async (req, res) => {
