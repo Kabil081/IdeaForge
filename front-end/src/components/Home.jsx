@@ -55,7 +55,7 @@ const Home = () => {
             </div>
             <h3 className="text-2xl font-semibold mb-2" >Financial Literacy</h3>
             <p className="text-gray-600 mb-4">Enhance your financial knowledge and make informed decisions.</p>
-            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700">Learn More</Button>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/literacy')} >Learn More</Button>
           </div>
 
           <div className="bg-white border border-gray-300 p-6 rounded-lg shadow-lg transition duration-300 hover:shadow-xl">
@@ -64,7 +64,7 @@ const Home = () => {
             </div>
             <h3 className="text-2xl font-semibold mb-2">Healthcare</h3>
             <p className="text-gray-600 mb-4">Health is wealth.Plan for rising healthcare costs and safeguard your savings.</p>
-            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/health')}>Estimate Costs</Button>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/health') }>Estimate Costs</Button>
           </div>
         </div>
       </div>

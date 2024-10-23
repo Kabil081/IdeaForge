@@ -12,6 +12,7 @@ import ForgotPassword from './components/ForgotPassword'
 import Discussion from './components/Discussion'
 import Recommendation from './components/Recommendation'
 import HealthcareCostEstimator from './components/HealthcareCostEstimator'
+import Health from "./components/Health"
 const App = () => {
   return (
     <Routes>
@@ -27,6 +28,7 @@ const App = () => {
       <Route path="/discussion" element={<Discussion />} />
       <Route path="/recommendation" element={<Recommendation />} />
       <Route path="/health" element={<HealthcareCostEstimator/>}/>
+      <Route path="/literacy" element={<Health/>}/>
     </Routes>
   )
 }
