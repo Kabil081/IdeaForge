@@ -9,6 +9,7 @@ import literacyImage from './images/literacy.png';
 import healthcareImage from './images/healthcare.png';
 import { Navigate, useNavigate } from 'react-router';
 import HealthcareCostEstimator from './HealthcareCostEstimator';
+
 const Home = () => {
   const navigate=useNavigate();
   return (
