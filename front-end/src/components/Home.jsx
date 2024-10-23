@@ -66,6 +66,14 @@ const Home = () => {
             <p className="text-gray-600 mb-4">Health is wealth.Plan for rising healthcare costs and safeguard your savings.</p>
             <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/health') }>Estimate Costs</Button>
           </div>
+          <div className="bg-white border border-gray-300 p-6 rounded-lg shadow-lg transition duration-300 hover:shadow-xl">
+            <div className="w-full h-32 mb-4">
+              <img src={healthcareImage} alt="Healthcare Costs" className="rounded-lg object-contain w-full h-full" />
+            </div>
+            <h3 className="text-2xl font-semibold mb-2">Plan a goal</h3>
+            <p className="text-gray-600 mb-4">Health is wealth.Plan for rising healthcare costs and safeguard your savings.</p>
+            <Button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg transition duration-300 hover:bg-blue-700" onClick={()=>navigate('/Goal') }>Plan now </Button>
+          </div>
         </div>
       </div>
       <Footer/>

@@ -13,6 +13,7 @@ import Discussion from './components/Discussion'
 import Recommendation from './components/Recommendation'
 import HealthcareCostEstimator from './components/HealthcareCostEstimator'
 import Health from "./components/Health"
+import Goal from './components/Goal'
 const App = () => {
   return (
     <Routes>
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/recommendation" element={<Recommendation />} />
       <Route path="/health" element={<HealthcareCostEstimator/>}/>
       <Route path="/literacy" element={<Health/>}/>
+      <Route path="/goal" element={<Goal/>}/>
     </Routes>
   )
 }
