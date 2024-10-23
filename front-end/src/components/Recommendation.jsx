@@ -15,7 +15,12 @@ const Recommendation = () => {
     loading: true
   });
 
-  // Fetch crypto prices
+  // Store previous metals prices for calculating price changes
+  const [prevMetalsPrices, setPrevMetalsPrices] = useState({
+    gold: null,
+    silver: null
+  });
+
   useEffect(() => {
     const fetchCryptoData = async () => {
       try {
@@ -39,10 +44,54 @@ const Recommendation = () => {
       }
     };
 
+    const fetchMetalsData = async () => {
+      try {
+        const response = await fetch('https://api.metals.live/v1/spot');
+        const data = await response.json();
+        const goldData = data.find(metal => metal.metal === 'XAU');
+        const silverData = data.find(metal => metal.metal === 'XAG');
+        const goldPricePerTroyOunce = goldData?.price || 2000;
+        const silverPricePerTroyOunce = silverData?.price || 25;
+        
+        const goldPriceINRPer10g = Math.round((goldPricePerTroyOunce * 83 * 10) / 31.1035);
+        const silverPriceINRPerKg = Math.round((silverPricePerTroyOunce * 83 * 1000) / 31.1035);
+
+        // Calculate price changes if previous prices exist
+        const goldChange = prevMetalsPrices.gold 
+          ? ((goldPriceINRPer10g - prevMetalsPrices.gold) / prevMetalsPrices.gold) * 100 
+          : 0;
+        const silverChange = prevMetalsPrices.silver 
+          ? ((silverPriceINRPerKg - prevMetalsPrices.silver) / prevMetalsPrices.silver) * 100 
+          : 0;
+
+        // Update previous prices for next comparison
+        setPrevMetalsPrices({
+          gold: goldPriceINRPer10g,
+          silver: silverPriceINRPerKg
+        });
+        
+        return {
+          price: goldPriceINRPer10g,
+          change: Number(goldChange.toFixed(2)),
+          silverPrice: silverPriceINRPerKg,
+          silverChange: Number(silverChange.toFixed(2))
+        };
+      } catch (error) {
+        console.error('Error fetching metals data:', error);
+        return {
+          price: 63000,
+          change: 0,
+          silverPrice: 75000,
+          silverChange: 0
+        };
+      }
+    };
+
     const fetchMarketData = async () => {
-      // In a real application, you would fetch this data from appropriate APIs
-      // Using sample data for demonstration
-      const crypto = await fetchCryptoData();
+      const [crypto, metals] = await Promise.all([
+        fetchCryptoData(),
+        fetchMetalsData()
+      ]);
       
       setMarketData({
         sensex: {
@@ -53,22 +102,17 @@ const Recommendation = () => {
           value: 22000,
           change: 0.8
         },
-        gold: {
-          price: 63000, // 24K Gold price per 10g in INR
-          change: 0.5,
-          silverPrice: 75000, // per kg in INR
-          silverChange: -0.3
-        },
+        gold: metals,
         crypto: crypto,
         loading: false
       });
     };
 
-    const interval = setInterval(fetchMarketData, 60000); // Update every minute
-    fetchMarketData(); // Initial fetch
+    const interval = setInterval(fetchMarketData, 60000); 
+    fetchMarketData(); 
 
     return () => clearInterval(interval);
-  }, []);
+  }, [prevMetalsPrices]);
 
   if (!location.state) {
     return (
@@ -329,7 +373,7 @@ const Recommendation = () => {
                   <li>Start with top coins (BTC/ETH)</li>
                   <li>Use UPI/bank transfer for deposits</li>
                   <li>Secure with 2FA authentication</li>
-                  <a href='https://binomo-investment.com/' className='font-thin text-[blue]'>Go to google</a>
+                  <a href='https://www.binance.com/' className='font-thin text-[blue]'>Go to google</a>
                 </ul>
               </div>
             </div>
