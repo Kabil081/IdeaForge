@@ -42,7 +42,7 @@ const Contact = () => {
               className="bg-blue-700 px-[30px] py-[10px] rounded-lg text-white font-bold cursor-pointer active:scale-90"
               onClick={openSendmail}
             >
-              Send mail
+              Get paid Guidance
             </button>
           </div>
         </div>
